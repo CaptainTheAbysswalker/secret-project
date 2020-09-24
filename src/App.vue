@@ -1,10 +1,6 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
@@ -15,6 +11,7 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  min-height: 100%;
 }
 
 #nav {
@@ -28,5 +25,17 @@
       color: #42b983;
     }
   }
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+button {
+  border: 1px solid rgba(31, 32, 65, 0.25);
+  border-radius: 4px;
+  padding: 5px;
+  color: white;
+  background: linear-gradient(180deg, #bc9cff 0%, #8ba4f9 100%);
 }
 </style>
