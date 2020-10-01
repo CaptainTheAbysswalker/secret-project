@@ -89,7 +89,7 @@ export default new Vuex.Store({
     getAdminData(context, filter) {
       function sendRequest(
         method = "get",
-        url = "http://localhost:3000/dominatus",
+        url = "https://secrethydra-server.herokuapp.com/dominatus",
         state
       ) {
         return fetch(url, {
