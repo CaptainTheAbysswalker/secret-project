@@ -38,4 +38,9 @@ button {
   color: white;
   background: linear-gradient(180deg, #bc9cff 0%, #8ba4f9 100%);
 }
+ul{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 </style>

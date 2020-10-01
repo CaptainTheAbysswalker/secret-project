@@ -4,22 +4,15 @@
   <div class="sign">
     <Loader v-if="!getStatus" />
     <div class="dates" v-else>
-      <ul v-for="date in getState" v-bind:key="date.id" class="dateLists">
-        <h1>{{ date.date }}</h1>
-        <div class="timeLists">
-          <li
-            v-for="time in date.times"
-            v-bind:key="time.id"
-            v-on:click="selectTime(date.date, time)"
-          >
-            {{ time.time }}
-          </li>
-        </div>
-      </ul>
+      <UserDataList
+        v-for="date in getState"
+        v-bind:key="date.id"
+        v-bind:data="date"
+      />
     </div>
 
-    <button class="signButton" v-on:click="alertSelected">Sign</button>
-    <div v-if="isSelected" class="registration">
+    <button class="signButton" v-on:click="checkSelected">Sign</button>
+    <div v-if="this.isSelected" class="registration">
       <div class="reginfo">
         <h1>Reg Info</h1>
         <h3 v-for="item in getSelectedTimes" v-bind:key="item.date">
@@ -55,11 +48,12 @@ class CreateRequestData {
   }
 }
 import Loader from "@/components/Loader.vue";
-
+import UserDataList from "@/components/UserDataList.vue";
 export default {
   name: "Home",
   components: {
     Loader,
+    UserDataList,
   },
   data: () => ({
     name: "",
@@ -70,7 +64,7 @@ export default {
     dates: [],
   }),
   methods: {
-    selectTime: function (date, time) {
+    /* selectTime: function (date, time) {
       let newItem = {
         id: time.id,
         date,
@@ -86,14 +80,14 @@ export default {
       } else {
         this.selectedTimes.splice(findIndex, 1);
       }
-    },
-    alertSelected: function () {
-      if (this.selectedTimes.length) {
+    }, */
+    checkSelected: function () {
+      if (this.getSelectedTimes.length) {
         this.isSelected = !this.isSelected;
       }
     },
     returnToSelect: function () {
-      this.selectedTimes = [];
+      this.$store.dispatch("clearSelected");
       this.isSelected = !this.isSelected;
     },
     sendData(url) {
@@ -111,15 +105,13 @@ export default {
         this.alert = "Укажите данные";
       } else {
         let newRequest = new CreateRequestData(this.name, this.tnumber);
-        for(let i in this.selectedTimes){
-          newRequest.id.push(this.selectedTimes[i].id)
+        for (let i in this.selectedTimes) {
+          newRequest.id.push(this.selectedTimes[i].id);
         }
-         postRequest("http://localhost:3000/data", newRequest).then((data) =>
-        console.log(data)
-      );
+        postRequest("http://localhost:3000/data", newRequest).then((data) => 
+          console.log(data)
+        );
       }
-
-
     },
   },
   computed: {
@@ -127,10 +119,11 @@ export default {
       return this.$store.state.isLoaded;
     },
     getSelectedTimes: function () {
-      const elements = this.selectedTimes.map((element) => {
+      /* const elements = this.selectedTimes.map((element) => {
         return `Date: ${element.date} time:${element.time} `;
       });
-      return elements;
+      return elements; */
+      return this.$store.state.selectedTimes;
     },
     getState: function () {
       return this.$store.state.data;
@@ -162,19 +155,18 @@ export default {
   margin-right: 20px;
   width: 320px;
 }
-.timeLists {
+/* .timeLists {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-}
-ul {
-  list-style: none;
+} */
+/* ul {
   display: flex;
   margin: 0;
   flex-wrap: wrap;
   padding: 0;
   width: 50%;
-}
+} */
 li {
   margin: 10px;
   padding: 10px;

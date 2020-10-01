@@ -1,7 +1,5 @@
 import Vue from "vue";
-import Vuex, {
-  Store
-} from "vuex";
+import Vuex, { Store } from "vuex";
 
 Vue.use(Vuex);
 
@@ -10,7 +8,8 @@ export default new Vuex.Store({
     data: null,
     isLoaded: false,
     filter: "asda",
-    filtered: 'kekw',
+    filtered: "kekw",
+    selectedTimes: [],
   },
   mutations: {
     setData(state, data) {
@@ -25,57 +24,90 @@ export default new Vuex.Store({
     dataLoaded(state) {
       state.isLoaded = true;
     },
+    selectTime(state, id) {
+      state.selectedTimes.push(id);
+    },
+    removeSelected(state, index) {
+      state.selectedTimes.splice(index, 1);
+    },
+    clearSelected(state) {
+      state.selectedTimes = [];
+    },
   },
   actions: {
     getData(context) {
       function sendRequest(
         method = "get",
-        url = "http://localhost:3000/data",
+        url = "https://secrethydra-server.herokuapp.com/data",
         state
       ) {
-        return fetch(url).then((res) => res.json());
+        return fetch(url, {
+          mode: "cors",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then((res) => res.json());
       }
 
-      sendRequest().then((data) => {
-        context.commit("setData", data);
-        context.commit('dataLoaded')
-      }).catch(err => {
-        context.commit("setData", err);
-        context.commit('dataLoaded')
-      });
+      sendRequest()
+        .then((data) => {
+          context.commit("setData", data);
+          context.commit("dataLoaded");
+        })
+        .catch((err) => {
+          context.commit("setData", err);
+          context.commit("dataLoaded");
+        });
     },
-    filterData(context) {
-
-
-    },
+    filterData(context) {},
     getFilter(context, filter) {
-      context.commit('setFilter', filter)
+      context.commit("setFilter", filter);
       if (!!filter) {
         let filteredData = this.state.data.filter((element) => {
-          return element.date == this.state.filter
-        })
-        context.commit('setFilteredData', filteredData)
-      }else{
-        context.commit('setFilteredData', this.state.data)
+          return element.date == this.state.filter;
+        });
+        context.commit("setFilteredData", filteredData);
+      } else {
+        context.commit("setFilteredData", this.state.data);
       }
-
     },
+    selectTime(context, id) {
+      let findIndex = this.state.selectedTimes.findIndex(
+        (element) => element == id
+      );
+      if (!(findIndex + 1)) {
+        context.commit("selectTime", id);
+      } else {
+        context.commit("removeSelected", findIndex);
+      }
+    },
+    clearSelected(context) {
+      context.commit("clearSelected");
+    },
+
     getAdminData(context, filter) {
       function sendRequest(
         method = "get",
         url = "http://localhost:3000/dominatus",
         state
       ) {
-        return fetch(url).then((res) => res.json());
+        return fetch(url, {
+          mode: "cors",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then((res) => res.json());
       }
 
-      sendRequest().then((data) => {
-        context.commit("setData", data);
-
-      }).catch(err => {
-        context.commit("setData", err);
-
-      });
+      sendRequest()
+        .then((data) => {
+          context.commit("setData", data);
+        })
+        .catch((err) => {
+          context.commit("setData", err);
+        });
     },
   },
   modules: {},

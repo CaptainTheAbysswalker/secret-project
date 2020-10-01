@@ -1,31 +1,6 @@
 <template>
   <div class="dominatus">
-  <div v-if="isShow" class='createForm'>
-  <div class="form">
-  <Loader v-if="isAwait" />
-  <form v-else>
-  <div class="formSelect">
-  <label>Select date</label>
-  <input type="date" required v-model="date"/>
-  </div>
-  <div class="formSelect">
-  <div class="timeSelect">
-  <label>Time from: </label>
-  <input type="text" required placeholder="00:00" v-model="timeFrom"/>
-  </div>
-  <div class="timeSelect">
-  <label>Time to: </label>
-  <input type="text" required placeholder="00:00" v-model="timeTo"/>
-  </div>
-  
-  </div>
-  <button v-on:click.prevent="addData">Add</button>
-  <button v-on:click.prevent="saveData">Save</button>
-  <button v-on:click.prevent="returnToData">Return</button>
-  </form>
-  </div>
-  </div>
-    <div class="filterBox">
+        <div class="filterBox">
       <ul class="filter">
         <li>
           <ul class="getData">
@@ -40,20 +15,53 @@
     </div>
     <div class="filteredData">
       <h1>Hydra dominatus</h1>
-      <h2>{{this.$store.state.filter}}</h2>
-      <AdminDataList />
+      <h2>{{ this.$store.state.filter }}</h2>
+      <!-- <div class="form" v-if="isShow">
+        <Loader v-if="isAwait" />
+        <form v-else>
+          <div class="formSelect">
+            <label>Select date</label>
+            <input type="date" required v-model="date" />
+          </div>
+          <div class="formSelect">
+            <div class="timeSelect">
+              <label>Time from: </label>
+              <input
+                type="text"
+                required
+                placeholder="00:00"
+                v-model="timeFrom"
+              />
+            </div>
+            <div class="timeSelect">
+              <label>Time to: </label>
+              <input
+                type="text"
+                required
+                placeholder="00:00"
+                v-model="timeTo"
+              />
+            </div>
+          </div>
+          <button v-on:click.prevent="addData">Add</button>
+          <button v-on:click.prevent="saveData">Save</button>
+          <button v-on:click.prevent="returnToData">Return</button>
+        </form>
+      </div> -->
+      <CreateDataForm v-if="isShow" />
+      <AdminDataList v-else/>
     </div>
   </div>
 </template>
 
 <script>
-import AdminDataList from "@/components/AdminDataList.vue"
+import AdminDataList from "@/components/AdminDataList.vue";
 import Loader from "@/components/Loader.vue";
+import CreateDataForm from "@/components/CreateDataForm.vue";
 
-class SaveData{
-  constructor(date, time){
-    this.date = date,
-    this.time = time
+class SaveData {
+  constructor(date, time) {
+    (this.date = date), (this.time = time);
   }
 }
 
@@ -61,34 +69,38 @@ export default {
   data: () => ({
     isShow: false,
     createdData: [],
-    date: '',
-    timeFrom: '',
-    timeTo: '',
+    date: "",
+    timeFrom: "",
+    timeTo: "",
     isAwait: false,
   }),
   components: {
     AdminDataList,
     Loader,
+    CreateDataForm
   },
   name: "Dominatus",
   methods: {
     setFilter(filter) {
       this.$store.dispatch("getFilter", filter);
     },
-    showForm(){
-      this.isShow = !this.isShow
+    showForm() {
+      this.isShow = !this.isShow;
     },
-    returnToData(){
-      this.isShow = !this.isShow
-      this.date = this.timeFrom = this.timeTo = ''
-  this.createdData = []
+    returnToData() {
+      this.isShow = !this.isShow;
+      this.date = this.timeFrom = this.timeTo = "";
+      this.createdData = [];
     },
-    addData(){
-      let element = new SaveData(this.date, this.timeFrom + ' ' + this.timeTo)
-      this.createdData.push(element)
-      this.timeFrom = this.timeTo = ''
+    addData() {
+      let element = new SaveData(
+        this.date,
+        this.timeFrom + " - " + this.timeTo
+      );
+      this.createdData.push(element);
+      this.timeFrom = this.timeTo = "";
     },
-    saveData(){
+    saveData() {
       function postRequest(url, data = {}) {
         return fetch(url, {
           method: "POST",
@@ -103,16 +115,15 @@ export default {
         this.alert = "Укажите данные";
       } else {
         this.isAwait = true;
-        postRequest("http://localhost:3000/dominatus", this.createdData).then((data) => {
-          this.isAwait = false;
-          console.log(data)
-        }
-        
-      );
+        postRequest("http://localhost:3000/dominatus", this.createdData).then(
+          (data) => {
+            this.isAwait = false;
+            console.log(data);
+          }
+        ).catch(err => console.log(err));
       }
-    }
+    },
   },
- 
 };
 </script>
 
@@ -120,12 +131,22 @@ export default {
 .dominatus {
   display: flex;
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  position: relative;
 }
 .filterBox {
+  position: absolute;
+  left: 0;
   width: 20%;
-  height: 100px;
+  height: 100%;
   background: aqua;
+}
+.filteredData {
+  padding-left: 25%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 .filter {
   list-style: none;
@@ -139,25 +160,24 @@ export default {
   align-items: center;
   justify-content: center;
 }
-.form{
- width: 50%;
+.form {
+  width: 50%;
   background-color: white;
-    height: 50%;
+  height: 50%;
 }
 form {
- width: 100%;
- height: 100%;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-around;
   padding: 15px;
-
 }
-.formSelect{
+.formSelect {
   display: flex;
 }
-.timeSelect{
+.timeSelect {
   display: flex;
 }
 </style>
