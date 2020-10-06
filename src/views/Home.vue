@@ -27,15 +27,12 @@ export default {
           },
         }).then((res) => res.text());
       }
-      if (!this.login || !this.password) {
-        this.alert = "Укажите данные";
-      } else {
+
         postRequest("https://secrethydra-server.herokuapp.com/login", user)
           .then((data) => {
-            console.log(data);
+            alert(data)
           })
           .catch((err) => console.log(err));
-      }
     },
   },
 }
