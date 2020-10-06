@@ -32,7 +32,7 @@ export default {
 
       postRequest("https://secrethydra-server.herokuapp.com/login", user)
         .then((data) => {
-          console.log('heh ', document.cookie)
+
           alert(data);
         })
         .catch((err) => console.log(err));
