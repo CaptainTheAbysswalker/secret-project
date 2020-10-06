@@ -21,7 +21,7 @@ export default {
       function postRequest(url, data = {}) {
         return fetch(url, {
           method: "POST",
-          mode: "cors",
+          mode: "no-cors",
           credentials: "include",
           body: JSON.stringify(data),
           headers: {
