@@ -28,7 +28,7 @@ export default {
 ul {
   display: flex;
   flex-direction: column;
-  border: 1px solid #f2c94c;;
+  border: 1px solid #f2c94c;
   border-radius: 4px;
   margin-right: 20px;
   margin-bottom: 20px;
@@ -41,5 +41,10 @@ ul {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+@media (max-width: 900px){
+  ul{
+    margin-right: 0;
+  }
 }
 </style>

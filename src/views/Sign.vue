@@ -1,43 +1,23 @@
 
 
 <template>
-  <div class="sign">
+  <ContactForm v-if="this.$store.state.isSaved" />
+  <div v-else class="sign">
     <Loader v-if="!getStatus" />
-    <div class="dates" v-else>
-      <UserDataList
-        v-for="date in getState"
-        v-bind:key="date.id"
-        v-bind:data="date"
-      />
-    </div>
-
-    <button class="signButton" v-on:click="checkSelected">Sign</button>
-    <div v-if="this.isSelected" class="registration">
-      <div class="reginfo">
-        <h1>Reg Info</h1>
-        <h3 v-for="item in getSelectedTimes" v-bind:key="item.date">
-          {{ item }}
-        </h3>
-        <form>
-          <input type="text" v-model="name" placeholder="type Name" required />
-          <input
-            type="text"
-            v-model="tnumber"
-            placeholder="type phone number"
-            required
-          />
-          <p class="alert">{{ this.alert }}</p>
-          <div class="buttons">
-            <button type="submit" v-on:click.prevent="sendData">
-              Sign now
-            </button>
-            <button type="reset" v-on:click="returnToSelect" class="return">
-              Return to select
-            </button>
-          </div>
-        </form>
+    <div class="dates" v-else-if="!this.$store.state.isSelected">
+      <h1>Select times</h1>
+      <div class="lists">
+        <UserDataList
+          v-for="date in getState"
+          v-bind:key="date.id"
+          v-bind:data="date"
+        />
       </div>
+      <button class="signButton" v-on:click="checkSelected">
+        Go to reserv
+      </button>
     </div>
+    <SignForm v-else />
   </div>
 </template>
 
@@ -47,13 +27,24 @@ class CreateRequestData {
     (this.id = []), (this.name = name), (this.phone = phone);
   }
 }
+
+class userSelectedElement {
+  constructor(id, date, time) {
+    (this.id = id), (this.date = date), (this.time = time);
+  }
+}
 import Loader from "@/components/Loader.vue";
 import UserDataList from "@/components/UserDataList.vue";
+import SignForm from "@/components/SignForm.vue";
+import ContactForm from "@/components/ContactForm.vue";
+
 export default {
   name: "Home",
   components: {
     Loader,
     UserDataList,
+    SignForm,
+    ContactForm,
   },
   data: () => ({
     name: "",
@@ -64,27 +55,28 @@ export default {
     dates: [],
   }),
   methods: {
-    /* selectTime: function (date, time) {
-      let newItem = {
-        id: time.id,
-        date,
-        time: time.time,
-      };
-
-      let findIndex = this.selectedTimes.findIndex(
-        (element) => element.id == newItem.id
-      );
-      if (!(findIndex + 1)) {
-        this.selectedTimes.push(newItem);
-        console.log(newItem.id)
-      } else {
-        this.selectedTimes.splice(findIndex, 1);
-      }
-    }, */
     checkSelected: function () {
       if (this.getSelectedTimes.length) {
-        this.isSelected = !this.isSelected;
+        this.$store.commit("setSelectedStatus");
+        this.setUserSelected();
       }
+    },
+    setUserSelected() {
+      let fullData = this.$store.state.data;
+      this.$store.state.selectedTimes.forEach((selectElement) => {
+        fullData.find((element) => {
+          for (let item in element.times) {
+            if (element.times[item].id == selectElement) {
+              let newElement = new userSelectedElement(
+                element.times[item].id,
+                element.date,
+                element.times[item].time
+              );
+              this.$store.dispatch("setUserSelectedData", newElement);
+            }
+          }
+        });
+      });
     },
     returnToSelect: function () {
       this.$store.dispatch("clearSelected");
@@ -108,7 +100,7 @@ export default {
         for (let i in this.selectedTimes) {
           newRequest.id.push(this.selectedTimes[i].id);
         }
-        postRequest("http://localhost:3000/data", newRequest).then((data) => 
+        postRequest("http://localhost:3000/data", newRequest).then((data) =>
           console.log(data)
         );
       }
@@ -119,10 +111,6 @@ export default {
       return this.$store.state.isLoaded;
     },
     getSelectedTimes: function () {
-      /* const elements = this.selectedTimes.map((element) => {
-        return `Date: ${element.date} time:${element.time} `;
-      });
-      return elements; */
       return this.$store.state.selectedTimes;
     },
     getState: function () {
@@ -136,16 +124,26 @@ export default {
 </script>
 <style lang="scss" scoped>
 .sign {
-  height: 100vh;
+  min-height: 100vh;
+  overflow: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  background: black;
+}
+.lists{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .dates {
   padding: 20px;
   display: flex;
-  flex-wrap: wrap;
+  justify-content: space-around;
+  /* flex-wrap: wrap; */
+  flex-direction: column;
+  align-items: center;
 }
 .dateLists {
   display: flex;
@@ -155,18 +153,6 @@ export default {
   margin-right: 20px;
   width: 320px;
 }
-/* .timeLists {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-} */
-/* ul {
-  display: flex;
-  margin: 0;
-  flex-wrap: wrap;
-  padding: 0;
-  width: 50%;
-} */
 li {
   margin: 10px;
   padding: 10px;
@@ -220,5 +206,17 @@ input {
 .alert {
   margin: 0;
   color: red;
+}
+.signButton{
+  width: 86px;
+}
+h1{
+  color: #f2c94c;
+}
+@media (max-width: 900px) {
+  .lists{
+    flex-direction: column;
+    align-items: center;
+  }
 }
 </style>

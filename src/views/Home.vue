@@ -1,17 +1,42 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <Loader />
+    <vueTelegramLogin
+    mode="callback"
+    telegram-login="CaptainTheAbysswalker_bot"
+    @callback="logIn"/>
   </div>
 </template>
 
 <script>
-import Loader from "@/components/Loader.vue"
+import {vueTelegramLogin} from 'vue-telegram-login'
 
 export default {
   name: 'Home',
   components: {
-    Loader,
-  }
+    vueTelegramLogin,
+  },
+  methods: {
+    logIn(user) {
+      function postRequest(url, data = {}) {
+        return fetch(url, {
+          method: "POST",
+          mode: "cors",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then((res) => res.text());
+      }
+      if (!this.login || !this.password) {
+        this.alert = "Укажите данные";
+      } else {
+        postRequest("https://secrethydra-server.herokuapp.com/login", user)
+          .then((data) => {
+            console.log(data);
+          })
+          .catch((err) => console.log(err));
+      }
+    },
+  },
 }
 </script>

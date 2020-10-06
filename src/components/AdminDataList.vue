@@ -1,12 +1,21 @@
 <template>
-  <ul>
+  <table>
+    <tr>
+      <th>Date</th>
+      <th>Time</th>
+      <!-- <th>isAvaible</th> -->
+      <th>Name</th>
+      <th>Phone</th>
+      <th>Clear item</th>
+      <th>Remove item</th>
+    </tr>
     <AdminDataItem
       v-for="item in getState"
       v-bind:data="item"
       v-bind:key="item._id"
     >
     </AdminDataItem>
-  </ul>
+  </table>
 </template>
 
 <script>
@@ -22,16 +31,17 @@ export default {
       return this.$store.state.filtered;
     },
   },
-  beforeCreate: async function () {
-    this.$store.dispatch("getAdminData");
-  },
 };
 </script>
 
 <style lang="scss" scoped>
-ul {
-  width: 90%;
-  display: flex;
-  flex-direction: column;
+th {
+  border: 1px solid black;
+}
+table {
+  background: #f2c94c;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+  width: 500px;
 }
 </style>

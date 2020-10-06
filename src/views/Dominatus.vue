@@ -1,56 +1,20 @@
 <template>
   <div class="dominatus">
-        <div class="filterBox">
-      <ul class="filter">
-        <li>
-          <ul class="getData">
-            <h3>Get data</h3>
-            <li v-on:click="setFilter('26.09.2020')">Svobodnie</li>
-            <li v-on:click="setFilter('27.09.2020')">Zapisannie</li>
-            <li v-on:click="setFilter('')">All</li>
-          </ul>
-          <button v-on:click="showForm">Create new</button>
-        </li>
+    <div class="filteredData" v-if="!this.$store.state.showAdminForm">
+      <h1>Data</h1>
+      <ul class="getData">
+        <li v-on:click="setFilter(true)">Show avaible</li>
+        <li v-on:click="setFilter(false)">Show reserved</li>
+        <li v-on:click="setFilter('')">Show all</li>
       </ul>
+      <AdminDataList v-if="this.$store.state.isAdminLoaded" />
+      <Loader v-else />
+      <div class="buttons">
+        <button v-on:click="showForm">Create new</button>
+        <button v-on:click="refreshData">Refresh</button>
+      </div>
     </div>
-    <div class="filteredData">
-      <h1>Hydra dominatus</h1>
-      <h2>{{ this.$store.state.filter }}</h2>
-      <!-- <div class="form" v-if="isShow">
-        <Loader v-if="isAwait" />
-        <form v-else>
-          <div class="formSelect">
-            <label>Select date</label>
-            <input type="date" required v-model="date" />
-          </div>
-          <div class="formSelect">
-            <div class="timeSelect">
-              <label>Time from: </label>
-              <input
-                type="text"
-                required
-                placeholder="00:00"
-                v-model="timeFrom"
-              />
-            </div>
-            <div class="timeSelect">
-              <label>Time to: </label>
-              <input
-                type="text"
-                required
-                placeholder="00:00"
-                v-model="timeTo"
-              />
-            </div>
-          </div>
-          <button v-on:click.prevent="addData">Add</button>
-          <button v-on:click.prevent="saveData">Save</button>
-          <button v-on:click.prevent="returnToData">Return</button>
-        </form>
-      </div> -->
-      <CreateDataForm v-if="isShow" />
-      <AdminDataList v-else/>
-    </div>
+    <CreateDataForm v-else />
   </div>
 </template>
 
@@ -72,12 +36,11 @@ export default {
     date: "",
     timeFrom: "",
     timeTo: "",
-    isAwait: false,
   }),
   components: {
     AdminDataList,
     Loader,
-    CreateDataForm
+    CreateDataForm,
   },
   name: "Dominatus",
   methods: {
@@ -85,71 +48,53 @@ export default {
       this.$store.dispatch("getFilter", filter);
     },
     showForm() {
-      this.isShow = !this.isShow;
+      this.$store.commit("adminFormVisible");
     },
     returnToData() {
       this.isShow = !this.isShow;
       this.date = this.timeFrom = this.timeTo = "";
       this.createdData = [];
     },
-    addData() {
-      let element = new SaveData(
-        this.date,
-        this.timeFrom + " - " + this.timeTo
-      );
-      this.createdData.push(element);
-      this.timeFrom = this.timeTo = "";
+    refreshData() {
+      this.$store.dispatch("getAdminData");
     },
-    saveData() {
-      function postRequest(url, data = {}) {
-        return fetch(url, {
-          method: "POST",
-          mode: "cors",
-          body: JSON.stringify(data),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }).then((res) => res.text());
-      }
-      if (!this.createdData) {
-        this.alert = "Укажите данные";
-      } else {
-        this.isAwait = true;
-        postRequest("http://localhost:3000/dominatus", this.createdData).then(
-          (data) => {
-            this.isAwait = false;
-            console.log(data);
-          }
-        ).catch(err => console.log(err));
-      }
-    },
+  },
+  mounted: function () {
+    this.$store.dispatch("getAdminData");
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .dominatus {
+  min-height: 100vh;
+  overflow: auto;
+  padding-bottom: 20px;
   display: flex;
-  width: 100%;
-  height: 100vh;
   position: relative;
+  background: black;
+  /*  align-items: center;
+  justify-content: center; */
 }
-.filterBox {
-  position: absolute;
-  left: 0;
-  width: 20%;
-  height: 100%;
-  background: aqua;
-}
+
 .filteredData {
-  padding-left: 25%;
-  width: 100%;
+  padding: 20px;
+  width: 600px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
-.filter {
-  list-style: none;
+.getData {
+  display: flex;
+  color: #f2c94c;
+  cursor: default;
+  margin-bottom: 15px;
+}
+.getData li {
+  margin-right: 10px;
+}
+.getData li:hover {
+  color: #ff9100;
 }
 .createForm {
   width: 100%;
@@ -160,17 +105,9 @@ export default {
   align-items: center;
   justify-content: center;
 }
-.form {
-  width: 50%;
-  background-color: white;
-  height: 50%;
-}
 form {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   justify-content: space-around;
   padding: 15px;
 }
@@ -179,5 +116,14 @@ form {
 }
 .timeSelect {
   display: flex;
+}
+h1 {
+  color: #f2c94c;
+  margin-bottom: 0;
+}
+.buttons {
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
 }
 </style>

@@ -1,15 +1,22 @@
 import Vue from "vue";
 import Vuex, { Store } from "vuex";
+import sendRequest from "../req/request";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     data: null,
-    isLoaded: false,
-    filter: "asda",
-    filtered: "kekw",
+    isAdminLoaded: true,
+    isLoaded: true,
+    isSelected: false,
+    isSaved: false,
+    filter: "",
+    filtered: "",
     selectedTimes: [],
+    dataForSave: [],
+    userSelectedData: [],
+    showAdminForm: false,
   },
   mutations: {
     setData(state, data) {
@@ -24,6 +31,9 @@ export default new Vuex.Store({
     dataLoaded(state) {
       state.isLoaded = true;
     },
+    adminLoaded(state) {
+      state.isAdminLoaded = !state.isAdminLoaded;
+    },
     selectTime(state, id) {
       state.selectedTimes.push(id);
     },
@@ -33,24 +43,37 @@ export default new Vuex.Store({
     clearSelected(state) {
       state.selectedTimes = [];
     },
+    prepareToSave(state, item) {
+      state.dataForSave.push(item);
+    },
+    removePrepared(state, index) {
+      state.dataForSave.splice(index, 1);
+    },
+    clearPrepared(state) {
+      state.dataForSave = [];
+    },
+    setUserSelectedData(state, element) {
+      state.userSelectedData.push(element);
+    },
+    removeUserSelected(state, index) {
+      state.userSelectedData.splice(index, 1);
+    },
+    clearUserSelected(state) {
+      state.userSelectedData = [];
+    },
+    setSelectedStatus(state) {
+      state.isSelected = !state.isSelected;
+    },
+    adminFormVisible(state) {
+      state.showAdminForm = !state.showAdminForm;
+    },
+    saveDataStatus(state) {
+      state.isSaved = !state.isSaved;
+    },
   },
   actions: {
     getData(context) {
-      function sendRequest(
-        method = "get",
-        url = "https://secrethydra-server.herokuapp.com/data",
-        state
-      ) {
-        return fetch(url, {
-          mode: "cors",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }).then((res) => res.json());
-      }
-
-      sendRequest()
+      sendRequest("get", "data")
         .then((data) => {
           context.commit("setData", data);
           context.commit("dataLoaded");
@@ -63,9 +86,9 @@ export default new Vuex.Store({
     filterData(context) {},
     getFilter(context, filter) {
       context.commit("setFilter", filter);
-      if (!!filter) {
+      if (filter || filter === false) {
         let filteredData = this.state.data.filter((element) => {
-          return element.date == this.state.filter;
+          return element.isAvaible == this.state.filter;
         });
         context.commit("setFilteredData", filteredData);
       } else {
@@ -82,31 +105,39 @@ export default new Vuex.Store({
         context.commit("removeSelected", findIndex);
       }
     },
+    removeUserSelected(context, id) {
+      let findIndex = this.state.userSelectedData.findIndex(
+        (element) => element == id
+      );
+      context.commit("removeUserSelected", findIndex);
+    },
     clearSelected(context) {
       context.commit("clearSelected");
     },
+    prepareToSave(context, item) {
+      context.commit("prepareToSave", item);
+    },
+    removePrepared(context, id) {
+      let findIndex = this.state.dataForSave.findIndex(
+        (element) => element.id == id
+      );
+      context.commit("removePrepared", findIndex);
+    },
+    setUserSelectedData(context, element) {
+      context.commit("setUserSelectedData", element);
+    },
 
     getAdminData(context, filter) {
-      function sendRequest(
-        method = "get",
-        url = "https://secrethydra-server.herokuapp.com/dominatus",
-        state
-      ) {
-        return fetch(url, {
-          mode: "cors",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }).then((res) => res.json());
-      }
-
-      sendRequest()
+      context.commit("adminLoaded");
+      sendRequest("get", "dominatus")
         .then((data) => {
           context.commit("setData", data);
+          context.commit("setFilteredData", data);
+          context.commit("adminLoaded");
         })
         .catch((err) => {
-          context.commit("setData", err);
+          console.log(err);
+          context.commit("adminLoaded");
         });
     },
   },

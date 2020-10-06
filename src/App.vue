@@ -3,7 +3,10 @@
     <router-view />
   </div>
 </template>
-
+<script>
+export default {
+}
+</script>
 <style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -28,6 +31,7 @@
 }
 html,
 body {
+  width: 100%;
   height: 100%;
   margin: 0;
 }
@@ -42,5 +46,8 @@ ul{
   list-style: none;
   padding: 0;
   margin: 0;
+}
+button:disabled{
+  background: #ccc;
 }
 </style>

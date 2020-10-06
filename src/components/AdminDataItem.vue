@@ -1,25 +1,37 @@
 <template>
-  <li>
-    <div class="data">
-      <span>{{ data.date }}</span>
-      <span>{{ data.time }}</span>
-      <span v-if="data.isAvaible">Svobodno</span>
-      <span>{{ data.Name }}</span>
-      <span>{{ data.Phone }}</span>
-    </div>
-    <div class="buttons">
-      <button v-on:click="clearItem(data._id)">Clear</button>
-      <button v-on:click="deleteItem(data._id)">Remove</button>
-    </div>
-  </li>
+  <tr>
+    <td>{{ data.date }}</td>
+    <td>{{ data.time }}</td>
+    <!-- <td>{{ data.isAvaible }}</td> -->
+    <td>{{ data.Name }}</td>
+    <td>{{ data.Telephone }}</td>
+    <td>
+      <button
+        v-on:click="clearItem(data._id)"
+        v-if="!data.isAvaible"
+        v-bind:disabled="!isComplete"
+      >
+        Clear
+      </button>
+    </td>
+    <td>
+      <button v-on:click="deleteItem(data._id)" v-bind:disabled="!isComplete">
+        Remove
+      </button>
+    </td>
+  </tr>
 </template>
 
 <script>
 export default {
   name: "AdminDataItem",
   props: ["data"],
+  data: () => ({
+    isComplete: true,
+  }),
   methods: {
     deleteItem(id) {
+      this.isComplete = false;
       function deleteRequest(url, id) {
         return fetch(url, {
           method: "DELETE",
@@ -30,13 +42,17 @@ export default {
           body: JSON.stringify(id),
         }).then((res) => res.text());
       }
-      let data = {id: id}
-      deleteRequest("http://localhost:3000/dominatus", data).then((data) =>
-        console.log(data)
-      );
+      let data = { id: id };
+      deleteRequest(
+        "https://secrethydra-server.herokuapp.com/dominatus",
+        data
+      ).then((data) => {
+        this.$destroy;
+      });
     },
 
-    clearItem(id){
+    clearItem(id) {
+      this.isComplete = false;
       function clearRequest(url, id) {
         return fetch(url, {
           method: "PATCH",
@@ -47,28 +63,25 @@ export default {
           body: JSON.stringify(id),
         }).then((res) => res.text());
       }
-      let data = {id: id}
-      clearRequest("http://localhost:3000/dominatus", data).then((data) =>
-        console.log(data)
-      );
-    }
+      let data = { id: id };
+      clearRequest(
+        "https://secrethydra-server.herokuapp.com/dominatus",
+        data
+      ).then((data) => {
+        console.log(data);
+      });
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
-li {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
+td {
+  padding: 5px;
+  border: 1px solid black;
 }
-.data {
-  width: 80%;
-  display: flex;
-  justify-content: space-between;
-}
-.buttons {
-  width: 20%;
-  display: flex;
-  justify-content: space-between;
+tr {
+  border: 1px solid black;
+  padding: 0;
+  box-sizing: border-box;
 }
 </style>
