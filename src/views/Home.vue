@@ -1,17 +1,18 @@
 <template>
   <div class="home">
     <vueTelegramLogin
-    mode="callback"
-    telegram-login="CaptainTheAbysswalker_bot"
-    @callback="logIn"/>
+      mode="callback"
+      telegram-login="CaptainTheAbysswalker_bot"
+      @callback="logIn"
+    />
   </div>
 </template>
 
 <script>
-import {vueTelegramLogin} from 'vue-telegram-login'
+import { vueTelegramLogin } from "vue-telegram-login";
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
     vueTelegramLogin,
   },
@@ -21,6 +22,7 @@ export default {
         return fetch(url, {
           method: "POST",
           mode: "cors",
+          credentials: "include",
           body: JSON.stringify(data),
           headers: {
             "Content-Type": "application/json",
@@ -28,12 +30,12 @@ export default {
         }).then((res) => res.text());
       }
 
-        postRequest("https://secrethydra-server.herokuapp.com/login", user)
-          .then((data) => {
-            alert(data)
-          })
-          .catch((err) => console.log(err));
+      postRequest("https://secrethydra-server.herokuapp.com/login", user)
+        .then((data) => {
+          alert(data);
+        })
+        .catch((err) => console.log(err));
     },
   },
-}
+};
 </script>
