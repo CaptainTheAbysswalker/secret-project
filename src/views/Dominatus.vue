@@ -79,10 +79,10 @@ export default {
 
 .filteredData {
   padding: 20px;
-  width: 600px;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
 }
 .getData {
   display: flex;
