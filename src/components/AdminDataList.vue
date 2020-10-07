@@ -35,6 +35,7 @@ export default {
 @media (max-width: 900px){
   .list{
     flex-direction: column;
+    align-items: center;
   }
 }
 </style>
