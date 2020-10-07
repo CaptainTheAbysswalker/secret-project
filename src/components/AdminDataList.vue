@@ -32,4 +32,9 @@ export default {
   flex-wrap: wrap;
   justify-content: center;
 }
+@media (max-width: 900px){
+  .list{
+    flex-direction: column;
+  }
+}
 </style>
