@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import sendRequest from "../req/request";
+
 export default {
   name: "AdminDataItem",
   props: ["data"],
@@ -40,44 +42,27 @@ export default {
   methods: {
     deleteItem(id) {
       this.isComplete = false;
-      function deleteRequest(url, id) {
-        return fetch(url, {
-          method: "DELETE",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(id),
-        }).then((res) => res.text());
-      }
       let data = { id: id };
-      deleteRequest(
-        "https://secrethydra-server.herokuapp.com/dominatus",
-        data
-      ).then((data) => {
-        this.$destroy;
-      });
+      sendRequest("DELETE", "dominatus", data)
+        .then((data) => {
+          console.log('complete')
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
 
     clearItem(id) {
       this.isComplete = false;
-      function clearRequest(url, id) {
-        return fetch(url, {
-          method: "PATCH",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(id),
-        }).then((res) => res.text());
-      }
       let data = { id: id };
-      clearRequest(
-        "https://secrethydra-server.herokuapp.com/dominatus",
-        data
-      ).then((data) => {
-        console.log(data);
-      });
+      sendRequest("PATCH", "dominatus", data)
+        .then((data) => {
+          console.log('complete')
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      
     },
   },
 };

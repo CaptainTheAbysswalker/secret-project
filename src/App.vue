@@ -38,6 +38,7 @@ body {
 button {
   border: 1px solid rgba(31, 32, 65, 0.25);
   border-radius: 4px;
+  max-height: 30px;
   padding: 5px;
   color: white;
   background: linear-gradient(180deg, #bc9cff 0%, #8ba4f9 100%);
