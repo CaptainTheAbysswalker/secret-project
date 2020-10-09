@@ -39,7 +39,6 @@ export default {
     logIn(user) {
       sendRequest("POST", "login", user)
         .then((data) => {
-          alert(data);
           this.$router.push("dominatus");
         })
         .catch((err) => console.log(err));

@@ -61,6 +61,9 @@ export default {
   },
   mounted: function () {
     this.$store.dispatch("getAdminData");
+    if(!this.$store.state.filtered){
+      this.$router.push("/");
+    }
   },
 };
 </script>
