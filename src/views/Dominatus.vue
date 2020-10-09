@@ -2,7 +2,7 @@
   <div class="dominatus">
     <div class="filteredData" v-if="!this.$store.state.showAdminForm">
       <h1>Data</h1>
-      <ul class="getData" v-if="!this.$store.state.isAdminLoaded">
+      <ul class="getData" v-if="this.$store.state.isAdminLoaded">
         <li v-on:click="setFilter(true)" >Show avaible</li>
         <li v-on:click="setFilter(false)">Show reserved</li>
         <li v-on:click="setFilter('')">Show all</li>
