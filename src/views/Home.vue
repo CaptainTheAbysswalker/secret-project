@@ -40,6 +40,7 @@ export default {
       sendRequest("POST", "login", user)
         .then((data) => {
           this.$router.push("dominatus");
+          return data
         })
         .catch((err) => console.log(err));
     },

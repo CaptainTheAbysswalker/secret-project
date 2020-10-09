@@ -59,8 +59,10 @@ export default {
       this.$store.dispatch("getAdminData");
     },
   },
-  mounted: function () {
+  beforeMount: function(){
     this.$store.dispatch("getAdminData");
+  },
+  mounted: function () {
     if(!this.$store.state.filtered){
       this.$router.push("/");
     }
