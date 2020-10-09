@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import sendRequest from "../req/request";
 import { vueTelegramLogin } from "vue-telegram-login";
 
 export default {
@@ -36,21 +37,10 @@ export default {
   },
   methods: {
     logIn(user) {
-      function postRequest(url, data = {}) {
-        return fetch(url, {
-          method: "POST",
-          mode: "cors",
-          credentials: "include",
-          body: JSON.stringify(data),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }).then((res) => res.text());
-      }
-
-      postRequest("https://secrethydra-server.herokuapp.com/login", user)
+      sendRequest("POST", "login", user)
         .then((data) => {
           alert(data);
+          this.$router.push("dominatus");
         })
         .catch((err) => console.log(err));
     },

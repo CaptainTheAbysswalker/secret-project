@@ -56,8 +56,10 @@
 </template>
 
 <script>
+import sendRequest from "../req/request";
 import Loader from "@/components/Loader.vue";
 import AddDataList from "@/components/AddDataList.vue";
+
 class SaveData {
   constructor(date, time) {
     (this.id = Date.now()), (this.date = date), (this.time = time);
@@ -100,23 +102,10 @@ export default {
     },
     saveData() {
       this.isComplete = false;
-      function postRequest(url, data = {}) {
-        return fetch(url, {
-          method: "POST",
-          mode: "cors",
-          body: JSON.stringify(data),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }).then((res) => res.text());
-      }
       if (!this.$store.state.dataForSave) {
         this.alert = "Укажите данные";
       } else {
-        postRequest(
-          "https://secrethydra-server.herokuapp.com/dominatus",
-          this.$store.state.dataForSave
-        )
+        sendRequest("POST", "dominatus", this.$store.state.dataForSave)
           .then((data) => {
             this.$store.commit("clearPrepared");
             this.dataSaved = true;
