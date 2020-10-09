@@ -3,7 +3,7 @@ function sendRequest(
   url,
   data
 ) {
-  return fetch("http://secrethydra-server.herokuapp.com/" + url, {
+  return fetch("https://secrethydra-server.herokuapp.com/" + url, {
     method: method,
     mode: "cors",
     credentials: "include",
