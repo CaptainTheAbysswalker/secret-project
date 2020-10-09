@@ -59,8 +59,8 @@ export default {
       this.$store.dispatch("getAdminData");
     },
   },
-  beforeMount: function(){
-    this.$store.dispatch("getAdminData");
+  beforeCreate: async function(){
+    await this.$store.dispatch("getAdminData");
   },
   mounted: function () {
     console.log(this.$store.state.filtered)
