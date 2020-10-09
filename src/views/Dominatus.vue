@@ -2,16 +2,17 @@
   <div class="dominatus">
     <div class="filteredData" v-if="!this.$store.state.showAdminForm">
       <h1>Data</h1>
-      <ul class="getData">
-        <li v-on:click="setFilter(true)">Show avaible</li>
+      <ul class="getData" v-if="!this.$store.state.isAdminLoaded">
+        <li v-on:click="setFilter(true)" >Show avaible</li>
         <li v-on:click="setFilter(false)">Show reserved</li>
         <li v-on:click="setFilter('')">Show all</li>
       </ul>
-      <AdminDataList v-if="this.$store.state.isAdminLoaded" />
+      <AdminDataList v-if="this.$store.state.filtered" />
       <Loader v-else />
       <div class="buttons">
-        <button v-on:click="showForm">Create new</button>
-        <button v-on:click="refreshData">Refresh</button>
+        <button v-on:click="showForm" v-bind:disabled="!this.$store.state.filtered">Create new</button>
+        <button v-on:click="refreshData" v-bind:disabled="!this.$store.state.filtered">Refresh</button>
+        <router-link tag="button" to="/">main</router-link>
       </div>
     </div>
     <CreateDataForm v-else />
@@ -36,6 +37,7 @@ export default {
     date: "",
     timeFrom: "",
     timeTo: "",
+    isLoaded: false
   }),
   components: {
     AdminDataList,
