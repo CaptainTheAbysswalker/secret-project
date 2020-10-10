@@ -1,17 +1,24 @@
 <template>
-  <ul>
+  <h1 v-if="isRemoved">Item removed</h1>
+  <ul v-else>
     <h1>{{ data.date }}</h1>
     <li>
       time: <span>{{ data.time }}</span>
     </li>
     <li>
-      isAvaible: <span>{{ data.isAvaible }}</span>
+      isAvaible:
+      <span v-if="isCleared">CLEARED</span> 
+      <span v-else>{{ data.isAvaible }}</span>
     </li>
     <li>
-      Name: <span>{{ data.Name }}</span>
+      Name: 
+      <span v-if="isCleared">CLEARED</span> 
+      <span v-else>{{ data.Name }}</span>
     </li>
     <li>
-      Phone: <span>{{ data.Telephone }}</span>
+      Phone: 
+      <span v-if="isCleared">CLEARED</span> 
+      <span v-else>{{ data.Telephone }}</span>
     </li>
     <li>
       <div class="buttons">
@@ -38,6 +45,8 @@ export default {
   props: ["data"],
   data: () => ({
     isComplete: true,
+    isRemoved: false,
+    isCleared: false,
   }),
   methods: {
     deleteItem(id) {
@@ -45,7 +54,8 @@ export default {
       let data = { id: id };
       sendRequest("DELETE", "dominatus", data)
         .then((data) => {
-          console.log('complete')
+          this.isComplete = true;
+          this.isRemoved = true
         })
         .catch((err) => {
           console.log(err);
@@ -57,12 +67,12 @@ export default {
       let data = { id: id };
       sendRequest("PATCH", "dominatus", data)
         .then((data) => {
-          console.log('complete')
+          this.isComplete = true;
+          this.isCleared = true
         })
         .catch((err) => {
           console.log(err);
         });
-      
     },
   },
 };
@@ -95,13 +105,13 @@ h1 {
 span {
   font-weight: bold;
 }
-.buttons{
+.buttons {
   width: 100%;
   display: flex;
   justify-content: space-around;
 }
-@media (max-width: 900px){
-  ul{
+@media (max-width: 900px) {
+  ul {
     margin-right: 0;
   }
 }
