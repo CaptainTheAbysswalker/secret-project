@@ -6,11 +6,13 @@
         <router-link tag="button" to="/sign">Go to sign</router-link>
         <div class="auth">
           <label for=""> Admin auth</label>
-          <vueTelegramLogin
-            mode="callback"
-            telegram-login="CaptainTheAbysswalker_bot"
-            @callback="logIn"
-          />
+          <div class="login">
+            <vueTelegramLogin
+              mode="callback"
+              telegram-login="CaptainTheAbysswalker_bot"
+              @callback="logIn"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -39,7 +41,6 @@ export default {
     logIn(user) {
       sendRequest("POST", "login", user)
         .then((data) => {
-          console.log(data)
           this.$router.push("dominatus");
         })
         .catch((err) => console.log(err));

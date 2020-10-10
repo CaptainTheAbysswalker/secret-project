@@ -136,8 +136,8 @@ export default new Vuex.Store({
           context.commit("adminLoaded");
         })
         .catch((err) => {
-          console.log(err);
           context.commit("adminLoaded");
+          console.log(err.message);
         });
     },
   },
