@@ -1,24 +1,21 @@
 <template>
-  <h1 v-if="isRemoved">Item removed</h1>
-  <ul v-else>
-    <h1>{{ data.date }}</h1>
+  <ul>
+    <h1 v-if="isRemoved">Item removed</h1>
+    <h1 v-else>{{ data.date }}</h1>
     <li>
       time: <span>{{ data.time }}</span>
     </li>
     <li>
       isAvaible:
-      <span v-if="isCleared">CLEARED</span> 
-      <span v-else>{{ data.isAvaible }}</span>
+      <span v-if="data.isAvaible">{{ data.isAvaible }}</span>
     </li>
     <li>
       Name: 
-      <span v-if="isCleared">CLEARED</span> 
-      <span v-else>{{ data.Name }}</span>
+      <span v-if="data.Name">{{ data.Name }}</span>
     </li>
     <li>
       Phone: 
-      <span v-if="isCleared">CLEARED</span> 
-      <span v-else>{{ data.Telephone }}</span>
+      <span v-if="data.Telephone">{{ data.Telephone }}</span>
     </li>
     <li>
       <div class="buttons">
