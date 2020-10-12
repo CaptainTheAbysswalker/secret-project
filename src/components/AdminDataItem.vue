@@ -5,9 +5,9 @@
     <li>
       time: <span>{{ data.time }}</span>
     </li>
-    <li>
+    <li v-if="!data.isAvaible">
       isAvaible:
-      <span v-if="data.isAvaible">{{ data.isAvaible }}</span>
+      <span >{{ data.isAvaible }}</span>
     </li>
     <li>
       Name: 
@@ -43,7 +43,6 @@ export default {
   data: () => ({
     isComplete: true,
     isRemoved: false,
-    isCleared: false,
   }),
   methods: {
     deleteItem(id) {
@@ -65,7 +64,7 @@ export default {
       sendRequest("PATCH", "dominatus", data)
         .then((data) => {
           this.isComplete = true;
-          this.isCleared = true
+          this.$store.dispatch("getAdminData");
         })
         .catch((err) => {
           console.log(err);
