@@ -52,6 +52,7 @@ export default {
         .then((data) => {
           this.isComplete = true;
           this.isRemoved = true
+          this.$store.dispatch("getAdminData");
         })
         .catch((err) => {
           console.log(err);
