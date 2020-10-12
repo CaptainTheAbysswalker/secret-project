@@ -3,21 +3,22 @@ import Vuex, { Store } from "vuex";
 import sendRequest from "../req/request";
 
 Vue.use(Vuex);
+const initialSate ={
+  data: null,
+  isAdminLoaded: true,
+  isLoaded: true,
+  isSelected: false,
+  isSaved: false,
+  filter: "",
+  filtered: "",
+  selectedTimes: [],
+  dataForSave: [],
+  userSelectedData: [],
+  showAdminForm: false,
+}
 
 export default new Vuex.Store({
-  state: {
-    data: null,
-    isAdminLoaded: true,
-    isLoaded: true,
-    isSelected: false,
-    isSaved: false,
-    filter: "",
-    filtered: "",
-    selectedTimes: [],
-    dataForSave: [],
-    userSelectedData: [],
-    showAdminForm: false,
-  },
+  state: {...initialSate },
   mutations: {
     setData(state, data) {
       state.data = data;
@@ -69,6 +70,11 @@ export default new Vuex.Store({
     },
     saveDataStatus(state) {
       state.isSaved = !state.isSaved;
+    },
+    resetState(state){
+      for(let st in state){
+        Vue.set(state, st, initialSate[st])
+      }
     },
   },
   actions: {

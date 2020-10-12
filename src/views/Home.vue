@@ -46,6 +46,9 @@ export default {
         .catch((err) => console.log(err));
     },
   },
+  created(){
+    this.$store.commit('resetState')
+  }
 };
 </script>
 

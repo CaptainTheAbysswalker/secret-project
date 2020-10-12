@@ -23,6 +23,7 @@
 
 <script>
 import SelectedDataList from "@/components/SelectedDataList.vue";
+import sendRequest from "../req/request";
 
 class CreateRequestData {
   constructor(name, phone) {
@@ -42,29 +43,15 @@ export default {
   },
   name: "CreateDataForm",
   methods: {
-    sendData(url) {
-      function postRequest(url, data = {}) {
-        return fetch(url, {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }).then((res) => res.text());
-      }
+    sendData() {
       if (!this.name || !this.tnumber) {
         this.alert = "Укажите данные";
       } else {
         let newRequest = new CreateRequestData(this.name, this.tnumber);
-        console.log(newRequest);
         for (let i in this.$store.state.selectedTimes) {
           newRequest.id.push(this.$store.state.selectedTimes[i]);
         }
-        postRequest(
-          "https://secrethydra-server.herokuapp.com/data",
-          newRequest
-        ).then((data) => {
+        sendRequest("POST", "data", newRequest).then((data) => {
           this.$store.commit("saveDataStatus");
         });
       }
@@ -141,7 +128,7 @@ input {
     align-items: center;
   }
 }
-p{
+p {
   margin: 0;
 }
 </style>

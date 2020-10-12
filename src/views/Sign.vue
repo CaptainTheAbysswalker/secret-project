@@ -13,9 +13,12 @@
           v-bind:data="date"
         />
       </div>
-      <button class="signButton" v-on:click="checkSelected">
-        Go to reserv
-      </button>
+      <div class="buttons">
+        <button class="signButton" v-on:click="checkSelected">
+          Go to reserv
+        </button>
+        <router-link tag="button" to="/">Main page</router-link>
+      </div>
     </div>
     <SignForm v-else />
   </div>
@@ -82,29 +85,6 @@ export default {
       this.$store.dispatch("clearSelected");
       this.isSelected = !this.isSelected;
     },
-    sendData(url) {
-      function postRequest(url, data = {}) {
-        return fetch(url, {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }).then((res) => res.text());
-      }
-      if (!this.name || !this.tnumber) {
-        this.alert = "Укажите данные";
-      } else {
-        let newRequest = new CreateRequestData(this.name, this.tnumber);
-        for (let i in this.selectedTimes) {
-          newRequest.id.push(this.selectedTimes[i].id);
-        }
-        postRequest("http://localhost:3000/data", newRequest).then((data) =>
-          console.log(data)
-        );
-      }
-    },
   },
   computed: {
     getStatus: function () {
@@ -132,7 +112,7 @@ export default {
   flex-direction: column;
   background: black;
 }
-.lists{
+.lists {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -195,7 +175,7 @@ input {
 .buttons {
   display: flex;
   justify-content: space-between;
-  width: 100%;
+  width: 320px;
 }
 .return {
   background: white;
@@ -207,14 +187,14 @@ input {
   margin: 0;
   color: red;
 }
-.signButton{
+.signButton {
   width: 86px;
 }
-h1{
+h1 {
   color: #f2c94c;
 }
 @media (max-width: 900px) {
-  .lists{
+  .lists {
     flex-direction: column;
     align-items: center;
   }

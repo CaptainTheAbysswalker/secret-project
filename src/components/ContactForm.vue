@@ -13,7 +13,7 @@
     <h2>For more info contact me:</h2>
     <Contact />
     <div class="buttons">
-      <router-link tag="button" to="/">Перейти к Foo</router-link>
+      <router-link tag="button" to="/">Main page</router-link>
       <button v-on:click="returnToSelect">Go to select</button>
     </div>
   </div>
