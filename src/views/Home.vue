@@ -54,6 +54,9 @@ export default {
 
 <style lang="scss" scoped>
 .home {
+  min-height: 100vh;
+  background: url("../assets/home.jpg");
+  background-size: cover;
   display: flex;
   align-items: center;
 }
@@ -76,7 +79,7 @@ footer {
   height: 70px;
   border-top: 1px solid #ccc;
   width: 100%;
-  background: white;
+  /* background: white */;
 }
 a {
   text-decoration: none;

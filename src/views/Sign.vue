@@ -110,7 +110,6 @@ export default {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background: black;
 }
 .lists {
   display: flex;
@@ -121,7 +120,6 @@ export default {
   padding: 20px;
   display: flex;
   justify-content: space-around;
-  /* flex-wrap: wrap; */
   flex-direction: column;
   align-items: center;
 }

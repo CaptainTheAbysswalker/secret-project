@@ -69,14 +69,11 @@ export default {
 
 <style lang="scss" scoped>
 .dominatus {
-  min-height: 100vh;
+  /* min-height: 100vh; */
   overflow: auto;
   padding-bottom: 20px;
   display: flex;
   position: relative;
-  background: black;
-  /*  align-items: center;
-  justify-content: center; */
 }
 
 .filteredData {
