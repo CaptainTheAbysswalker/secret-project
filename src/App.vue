@@ -4,8 +4,7 @@
   </div>
 </template>
 <script>
-export default {
-}
+export default {};
 </script>
 <style lang="scss">
 #app {
@@ -15,7 +14,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   min-height: 100%;
-    background: url("./assets/home.jpg");
+  background: url("./assets/home.jpg");
   background-size: cover;
 }
 
@@ -45,12 +44,12 @@ button {
   color: white;
   background: linear-gradient(180deg, #bc9cff 0%, #8ba4f9 100%);
 }
-ul{
+ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-button:disabled{
+button:disabled {
   background: #ccc;
 }
 </style>
